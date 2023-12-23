@@ -1,0 +1,44 @@
+*{
+    box-sizing: border-box;
+}
+.paintRow{
+    display: flex;
+    width: fit-content;
+    flex-direction: row;
+}
+.paintCell{
+    width: 10px;
+    height: 10px;
+    border: 1px black solid;
+    user-select: none;
+}
+#paintMain{
+    position: relative;
+    width: fit-content;
+}
+#color{
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+#paint{
+    width: 100vh;
+    height: 100%;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
+    overflow: scroll;
+    overflow: none;
+    border: 1px black solid;
+}
+#main{
+    padding: 10px;
+    width: 100vw;
+    height: 100vh;
+}
+body{
+    background-color: wheat;
+    padding: 0;
+    margin: 0;
+}
