@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "electron": "^25.1.1",
+    "pngjs": "^7.0.0",
     "sass": "^1.69.5",
     "scss": "^0.2.4"
   }

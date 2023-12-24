@@ -46,7 +46,7 @@ class Panel {
         for (let i = 0; i < h; i++) {
             const row = [];
             for (let j = 0; j < w; j++) {
-                row.push(new Pixel(255, 255, 255, 1));
+                row.push(new Pixel(255, 255, 255, 0));
             }
             pixel.push(row);
         }
@@ -104,6 +104,11 @@ class Panel {
                 cell.addEventListener("mouseenter", (e) => {
                     this.GridEnter(e, cell);
                 });
+                cell.addEventListener("click", (e) => {
+                    this.action="paint"
+                    this.GridEnter(e, cell);
+                    this.action="none"
+                });
                 this.PaintCell(cell);
                 row.appendChild(cell);
             }
@@ -122,7 +127,6 @@ class Panel {
     }
 
     RePaintAll() {
-        console.log(this.pixel);
         for (let i of this.cell) {
             this.PaintCell(i);
         }
@@ -131,6 +135,7 @@ class Panel {
     PaintCell(cell) {
         const pixel = this.pixel[cell.i][cell.j];
         cell.style.backgroundColor = `rgba(${pixel.r}, ${pixel.g}, ${pixel.b}, ${pixel.a})`;
+        
     }
 }
 

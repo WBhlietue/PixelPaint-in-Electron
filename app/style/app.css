@@ -1,22 +1,29 @@
-*{
+* {
     box-sizing: border-box;
 }
-.paintRow{
+.paintRow {
     display: flex;
     width: fit-content;
     flex-direction: row;
 }
-.paintCell{
+.paintCell {
+    
     width: 10px;
     height: 10px;
-    border: 1px black solid;
+    /* border: 1px black solid; */
     user-select: none;
 }
-#paintMain{
+#paintMain {
     position: relative;
     width: fit-content;
+    background-image: url("../assets/image/alpha.png");
+    /* background-position: center; */
+    background-size: 10px 10px;
+    image-rendering: pixelated;
+    box-shadow: 0 0 10px #000000, 0 0 10px #000000, 0 0 10px #000000,
+        0 0 10px #000000;
 }
-#color{
+#color {
     display: flex;
     flex-direction: column;
     width: 300px;
@@ -24,20 +31,26 @@
     right: 0;
     top: 0;
 }
-#paint{
+#paint {
     width: 100vh;
     height: 100%;
     box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
     overflow: scroll;
     overflow: none;
     border: 1px black solid;
+    /* background: linear-gradient(
+        45deg,
+        rgba(59, 59, 59, 1) 0%,
+        rgba(199, 199, 199, 1) 51%
+    ); */
+    background-color: rgb(82, 82, 82);
 }
-#main{
+#main {
     padding: 10px;
     width: 100vw;
     height: 100vh;
 }
-body{
+body {
     background-color: wheat;
     padding: 0;
     margin: 0;
