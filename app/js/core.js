@@ -9,9 +9,9 @@ class ColorPanel {
         this.pen = pen;
     }
     Spawn(element) {
-        const color = document.createElement("input");
+        const color = document.getElementById("colorPanel");
         color.type = "color";
-        const a = document.createElement("input");
+        const a = document.getElementById("colorAlpha");
         a.type = "range";
         a.min = 0;
         a.max = 255;
@@ -19,71 +19,102 @@ class ColorPanel {
         a.value = 255;
         color.addEventListener("change", () => {
             const c = color.value;
-            const r = parseInt(c.substring(1, 3), 16);
-            const g = parseInt(c.substring(3, 5), 16);
-            const b = parseInt(c.substring(5, 7), 16);
-            this.pen.r = r;
-            this.pen.g = g;
-            this.pen.b = b;
+            this.pen.hex = c;
+        });
+        color.addEventListener("input", () => {
+            const c = color.value;
+            this.pen.hex = c;
         });
         a.addEventListener("change", () => {
             this.pen.a = parseInt(a.value) / 255;
         });
-        element.appendChild(color);
-        element.appendChild(a);
     }
 }
 
 class Panel {
-    constructor(w, h, p) {
+    constructor(config, p) {
         this.pen = p;
-        this.width = w;
-        this.height = h;
+        this.config = config;
+        this.width = config.width;
+        this.height = config.height;
         this.cell = [];
         this.action = "none";
         this.history = [];
-        const pixel = [];
-        for (let i = 0; i < h; i++) {
-            const row = [];
-            for (let j = 0; j < w; j++) {
-                row.push(new Pixel(255, 255, 255, 0));
-            }
-            pixel.push(row);
-        }
-        this.pixel = pixel;
+        this.ctx = null;
         document.onkeydown = (e) => {
             if (e.ctrlKey && e.key.toLowerCase() == "z") {
                 if (this.history.length == 0) {
                     return;
                 }
-                this.pixel = this.history.pop();
-                this.RePaintAll();
-                console.log("undo");
+                const history = this.history.pop();
+                const backColor = this.ctx.fillStyle;
+                const backAlpha = this.ctx.globalAlpha;
+                for (let y = 0; y < this.config.height; y++) {
+                    for (let x = 0; x < this.config.width; x++) {
+                        const s = history[y][x];
+                        const color =
+                            "#" +
+                            s[0].toString(16) +
+                            s[1].toString(16) +
+                            s[2].toString(16);
+                        const a = s[3] / 255;
+                        this.ctx.fillStyle = color;
+                        this.ctx.globalAlpha = a;
+                        this.ctx.clearRect(x, y, 1, 1);
+                        this.ctx.fillRect(x, y, 1, 1);
+                    }
+                }
+                this.ctx.fillStyle = backColor;
+                this.ctx.globalAlpha = backAlpha;
             }
         };
     }
 
-    ClonePixel() {
-        let pixel = [];
-        for (let i = 0; i < this.height; i++) {
-            const row = [];
-            for (let j = 0; j < this.width; j++) {
-                const a = this.pixel[i][j];
-                const p = new Pixel(a.r, a.g, a.b, a.a);
-                row.push(p);
-            }
-            pixel.push(row);
-        }
-        return pixel;
-    }
-
     SpawnPaint(element) {
-        const main = CreateElement("paintMain");
-        main.id = "paintMain"
+        const main = document.createElement("canvas");
+        main.id = "paintMain";
+        main.style.width = this.config.width + "px";
+        main.style.height = this.config.height + "px";
+        main.width = this.config.width;
+        main.height = this.config.height;
+        element.appendChild(main);
+        this.ctx = main.getContext("2d");
+        this.ctx.imageSmoothingEnabled = false;
         main.addEventListener("mousedown", (e) => {
             if (e.button == 0) {
-                this.history.push(this.ClonePixel());
                 this.action = "paint";
+                this.ctx.globalAlpha = this.pen.a;
+                this.ctx.fillStyle = this.pen.hex;
+                const history = [];
+                for (let y = 0; y < this.config.height; y++) {
+                    const tmp = [];
+                    for (let x = 0; x < this.config.width; x++) {
+                        const data = this.ctx.getImageData(x, y, 1, 1).data;
+                        tmp.push(data);
+                    }
+                    history.push(tmp);
+                }
+                this.history.push(history);
+                let x = parseInt(
+                    (e.clientX - main.offsetLeft) / this.config.scale +
+                        main.width / 2
+                );
+                let y = parseInt(
+                    (e.clientY - main.offsetTop) / this.config.scale +
+                        main.height / 2
+                );
+                this.ctx.clearRect(
+                    x,
+                    y,
+                    this.config.penWidth,
+                    this.config.penWidth
+                );
+                this.ctx.fillRect(
+                    x,
+                    y,
+                    this.config.penWidth,
+                    this.config.penWidth
+                );
             }
         });
         main.addEventListener("mouseup", (e) => {
@@ -93,72 +124,36 @@ class Panel {
                 this.action = "none";
             }
         });
-        this.cell = [];
-        for (let i = 0; i < this.height; i++) {
-            const row = CreateElement("paintRow");
-            for (let j = 0; j < this.width; j++) {
-                const cell = CreateElement("paintCell");
-                this.cell.push(cell);
-                cell.i = i;
-                cell.j = j;
-                cell.addEventListener("mouseenter", (e) => {
-                    this.GridEnter(e, cell);
-                });
-                cell.addEventListener("click", (e) => {
-                    this.action="paint"
-                    this.GridEnter(e, cell);
-                    this.action="none"
-                });
-                this.PaintCell(cell);
-                row.appendChild(cell);
+        main.addEventListener("mousemove", (e) => {
+            if (this.action == "paint") {
+                let x = parseInt(
+                    (e.clientX - main.offsetLeft) / this.config.scale +
+                        main.width / 2
+                );
+                let y = parseInt(
+                    (e.clientY - main.offsetTop) / this.config.scale +
+                        main.height / 2
+                );
+                this.ctx.clearRect(
+                    x,
+                    y,
+                    this.config.penWidth,
+                    this.config.penWidth
+                );
+                this.ctx.fillRect(
+                    x,
+                    y,
+                    this.config.penWidth,
+                    this.config.penWidth
+                );
             }
-            main.appendChild(row);
-        }
-        element.appendChild(main);
-        console.log(element);
-    
-    }
-    GridEnter(e, cell) {
-        if (this.action === "paint") {
-            this.pixel[cell.i][cell.j].Paint(this.pen);
-            this.PaintCell(cell);
-            console.log("paint");
-        }
-    }
-
-    RePaintAll() {
-        for (let i of this.cell) {
-            this.PaintCell(i);
-        }
-    }
-
-    PaintCell(cell) {
-        const pixel = this.pixel[cell.i][cell.j];
-        cell.style.backgroundColor = `rgba(${pixel.r}, ${pixel.g}, ${pixel.b}, ${pixel.a})`;
-        
-    }
-}
-
-class Pixel {
-    constructor(r, g, b, a) {
-        this.r = r;
-        this.g = g;
-        this.b = b;
-        this.a = a;
-    }
-    Paint(pen) {
-        this.r = pen.r;
-        this.g = pen.g;
-        this.b = pen.b;
-        this.a = pen.a;
+        });
     }
 }
 
 class Pen {
-    constructor(r, g, b, a) {
-        this.r = r;
-        this.g = g;
-        this.b = b;
+    constructor(hex, a) {
+        this.hex = hex;
         this.a = a;
     }
 }

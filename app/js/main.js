@@ -2,32 +2,29 @@ const require = window.parent.require;
 const fs = require("fs");
 const PNG = require("pngjs").PNG;
 const paintWindowConfig = {
-    width:64,
-    height:64,
-    scale: 1,
+    width: 16,
+    height: 16,
+    scale: 5,
+    scaleInit: 1,
     left: 0,
     top: 0,
+    penWidth: 1,
 };
-const pen = new Pen(0, 0, 0, 1);
+const pen = new Pen("#000000", 255);
 const color = new ColorPanel(pen);
-const panel = new Panel(paintWindowConfig.width, paintWindowConfig.height, pen);
+const panel = new Panel(paintWindowConfig, pen);
 panel.SpawnPaint(document.getElementById("paint"));
-const controlPanel = document.getElementById("controls");
-const colorPanel = document.createElement("div");
-colorPanel.id = "color";
-color.Spawn(colorPanel);
-controlPanel.appendChild(colorPanel);
+color.Spawn();
 document.addEventListener("mousedown", function (event) {
     if (event.button === 1) {
         event.preventDefault();
     }
 });
 
-
 const paintWindow = document.getElementById("paintMain");
-document.getElementById("btnTest").addEventListener("click", ()=>{
+document.getElementById("btnTest").addEventListener("click", () => {
     ExportPNG();
-})
+});
 InitPanelEvent();
 PaintWindowSet();
 
@@ -42,6 +39,8 @@ function InitPanelEvent() {
             isEnter = false;
         }
     });
+    paintWindowConfig.scale = main.offsetWidth / paintWindow.offsetWidth;
+    paintWindowConfig.scaleInit = main.offsetWidth / paintWindow.offsetWidth;
     main.addEventListener("mousemove", Move);
 
     function MoveBegin(e) {
@@ -65,18 +64,16 @@ function InitPanelEvent() {
     function Scroll(e) {
         if (e.ctrlKey) {
             if (e.deltaY > 0) {
-                if (paintWindowConfig.scale > 0.1) {
-                    paintWindowConfig.scale -= 0.1;
-                }
+                paintWindowConfig.scale -= 0.1 * paintWindowConfig.scaleInit;
             } else {
-                if (paintWindowConfig.scale < 5) {
-                    paintWindowConfig.scale += 0.1;
-                }
+                paintWindowConfig.scale += 0.1 * paintWindowConfig.scaleInit;
             }
             PaintWindowSet();
         }
-        console.log(e);
     }
+    PaintWindowSet();
+    const size = parseInt(paintWindow.offsetHeight / paintWindowConfig.height);
+    paintWindow.style.backgroundSize = size + "px " + size + "px";
 }
 
 function PaintWindowSet() {
@@ -89,15 +86,21 @@ function ExportPNG() {
     const width = paintWindowConfig.width;
     const height = paintWindowConfig.height;
     const png = new PNG({ width, height });
+    const canvas = document.getElementById("paintMain");
+    const context = canvas.getContext("2d");
 
     for (let y = 0; y < height; y++) {
         for (let x = 0; x < width; x++) {
+            const data = context.getImageData(x, y, 1, 1).data;
             const idx = (width * y + x) << 2;
-            png.data[idx] = panel.pixel[y][x].r; // R
-            png.data[idx + 1] = panel.pixel[y][x].g; // G
-            png.data[idx + 2] = panel.pixel[y][x].b; // B
-            png.data[idx + 3] = panel.pixel[y][x].a*255; // A
+            png.data[idx] = data[0]; // R
+            console.log(data[0], data[1], data[2], data[3]);
+            png.data[idx + 1] = data[1]; // G
+            png.data[idx + 2] = data[2]; // B
+            png.data[idx + 3] = data[3]; // A
         }
     }
+    console.log(png);
+    console.log("export");
     png.pack().pipe(fs.createWriteStream("output.png"));
 }
