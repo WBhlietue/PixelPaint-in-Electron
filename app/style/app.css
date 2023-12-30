@@ -24,6 +24,13 @@
     position: absolute;
     right: 0;
     top: 0;
+    background-color: wheat;
+    border: 1px black solid;
+    height: 100vh;
+}
+.sizeInput{
+    width: 30%;
+    text-align: center;
 }
 #paint {
     width: 100vh;
@@ -48,5 +55,5 @@ body {
     background-color: wheat;
     padding: 0;
     margin: 0;
-    /* overflow: hidden; */
+    overflow: hidden;
 }

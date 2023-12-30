@@ -23,6 +23,7 @@ class ColorPanel {
         });
         color.addEventListener("input", () => {
             const c = color.value;
+            document.getElementById("colorHex").value = c;
             this.pen.hex = c;
         });
         a.addEventListener("change", () => {

@@ -11,11 +11,20 @@
         <div id="main">
             <div id="paint"> </div>
             <div class="controls">
-                <div id="color">
+                <div class="create">
+                    <div>Page</div>
+                    <input type="number" class= "sizeInput" id="sizeX">
+                    <label>X</label>
+                    <input type="number" class= "sizeInput" id="sizeY">
+                    <button id="bntCreate">Create New</button>
+                </div>
+                <div class="color">
+                    <label>Color</label>
                     <input id="colorPanel" />
+                    <input id="colorHex">
                     <input id="colorAlpha" />
                 </div>
-                <button id="btnTest">Export</button>
+                <button id="btnExport">Export</button>
             </div>
         </div>
         <script src="../js/core.js"></script>
