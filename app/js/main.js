@@ -260,30 +260,9 @@ function OpenPng() {
             ctx.fillRect(x, y, 1, 1);
           }
         }
+        ctx.globalAlpha = 1;
+        ctx.fillStyle = "#000000";
       })
       .on("error", function (err) {});
-
-    // fs.readFile(e.target.files[0].path, "utf8", (err, data) => {
-    //   if (err) {
-    //     return;
-    //   }
-    //   const d = JSON.parse(data);
-    //   paintWindowConfig.width = d.width;
-    //   paintWindowConfig.height = d.height;
-    //   const panel = CreatePage();
-    //   const ctx = panel.ctx;
-    //   for (let x = 0; x < d.width; x++) {
-    //     for (let y = 0; y < d.height; y++) {
-    //       const hex = ConvertHex(d.data[0][x][y]);
-    //       const a = d.data[0][x][y][3] / 255;
-    //       ctx.fillStyle = hex;
-    //       ctx.globalAlpha = a;
-    //       ctx.clearRect(x, y, 1, 1);
-    //       ctx.fillRect(x, y, 1, 1);
-    //     }
-    //   }
-    //   ctx.globalAlpha = 1;
-    //   ctx.fillStyle = "#000000";
-    // });
   };
 }

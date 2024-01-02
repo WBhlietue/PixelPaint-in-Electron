@@ -1,18 +1,32 @@
 {
-  "name": "anzan",
+  "name": "pixelpaint",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "electron ."
+    "start": "electron .",
+    "build": "electron-builder",
+    "buildWin": "electron-packager . MyApp --platform=win32 --arch=x64",
+    "buildMac": "electron-packager . MyApp --platform=darwin --arch=x64 --icon=app/assets/logo.icns --overwrite"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "pngjs": "^7.0.0"
+  },
+  "devDependencies": {
     "electron": "^25.1.1",
-    "pngjs": "^7.0.0",
+    "electron-builder": "^24.9.1",
+    "electron-packager": "^17.1.2",
+    
     "sass": "^1.69.5",
     "scss": "^0.2.4"
+  },
+  "build": {
+    "mac": {
+      "target": "dir",
+      "icon": "app/assets/logo.icns"
+    }
   }
 }
