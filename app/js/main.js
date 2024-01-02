@@ -46,7 +46,7 @@ document.getElementById("sizeX").oninput = () => {
   paintWindowConfig.width = document.getElementById("sizeX").value;
 };
 document.getElementById("sizeY").oninput = () => {
-  paintWindowConfig.width = document.getElementById("sizeY").value;
+  paintWindowConfig.height = document.getElementById("sizeY").value;
 };
 document.getElementById("colorHex").oninput = () => {
   const result = /^#[0-9A-F]{6}$/i.test(
@@ -241,6 +241,8 @@ function OpenPng() {
     fs.createReadStream(e.target.files[0].path)
       .pipe(new PNG())
       .on("parsed", function () {
+        paintWindowConfig.width = this.width;
+        paintWindowConfig.height = this.height;
         const panel = CreatePage();
         const ctx = panel.ctx;
         for (let x = 0; x < this.width; x++) {
@@ -263,6 +265,8 @@ function OpenPng() {
         ctx.globalAlpha = 1;
         ctx.fillStyle = "#000000";
       })
-      .on("error", function (err) {});
+      .on("error", function (err) {
+        console.log(err);
+      });
   };
 }

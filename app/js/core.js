@@ -90,6 +90,7 @@ class Panel {
       }
     }
     this.ctx.fillStyle = backColor;
+  
     this.ctx.globalAlpha = backAlpha;
   }
 
@@ -188,6 +189,7 @@ class Panel {
     main.style.height = this.config.height + "px";
     main.width = this.config.width;
     main.height = this.config.height;
+    console.log(main.width, main.height);
     element.appendChild(main);
     this.ctx = main.getContext("2d");
     this.ctx.imageSmoothingEnabled = false;
@@ -201,15 +203,41 @@ class Panel {
           document.title += "*";
         }
         const history = [];
+        const imageData = this.ctx.getImageData(
+          0,
+          0,
+          this.config.width,
+          this.config.height
+        );
+        const data = imageData.data;
+        const pixelSize = 4; 
+        const newImageData = [];
+
         for (let y = 0; y < this.config.height; y++) {
-          const tmp = [];
+          const row = [];
           for (let x = 0; x < this.config.width; x++) {
-            const data = this.ctx.getImageData(x, y, 1, 1).data;
-            tmp.push(data);
+            const index = (y * this.config.width + x) * pixelSize;
+            const pixel = [
+              data[index],
+              data[index + 1],
+              data[index + 2],
+              data[index + 3],
+            ];
+            row.push(pixel);
           }
-          history.push(tmp);
+          newImageData.push(row);
         }
-        this.history.push(history);
+        this.history.push(newImageData)
+
+        // for (let y = 0; y < this.config.height; y++) {
+        //   const tmp = [];
+        //   for (let x = 0; x < this.config.width; x++) {
+        //     // const data = this.ctx.getImageData(x, y, 1, 1).data;
+        //     tmp.push(data[i], data[i + 1], data[i + 2], data[i + 3]);
+        //   }
+        //   history.push(tmp);
+        // }
+        // this.history.push(history);
         let x = parseInt(
           (e.clientX - main.offsetLeft) / this.config.scale + main.width / 2
         );
