@@ -1,6 +1,8 @@
 const require = window.parent.require;
 const fs = require("fs");
 const PNG = require("pngjs").PNG;
+const { ipcRenderer } = require("electron");
+
 const paintWindowConfig = {
   width: 16,
   height: 16,
@@ -67,7 +69,11 @@ function ExportPNG() {
   }
   console.log(png);
   console.log("export");
-  png.pack().pipe(fs.createWriteStream("output.png"));
+  ipcRenderer.send("save-file");
+  ipcRenderer.once("save-file-res", (event, filePath) => {
+    png.pack().pipe(fs.createWriteStream(filePath));
+  });
+
 }
 function CreatePage() {
   document.getElementById("paint").innerHTML = "";
@@ -131,5 +137,3 @@ function CreatePage() {
     paintWindow.style.transform = `translate(-50%, -50%) scale(${paintWindowConfig.scale})`;
   }
 }
-
-
