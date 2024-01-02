@@ -59,9 +59,11 @@ class Panel {
     this.ctx = null;
     this.SelectTools();
     document.onkeydown = (e) => {
-      console.log(e);
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() == "z") {
         this.Undo();
+      }
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() == "s") {
+        SaveFile();
       }
     };
   }
@@ -69,13 +71,17 @@ class Panel {
     if (this.history.length == 0) {
       return;
     }
+    if (this.config.isSave) {
+      this.config.isSave = false;
+      document.title += "*";
+    }
     const history = this.history.pop();
     const backColor = this.ctx.fillStyle;
     const backAlpha = this.ctx.globalAlpha;
     for (let y = 0; y < this.config.height; y++) {
       for (let x = 0; x < this.config.width; x++) {
         const s = history[y][x];
-        const color =ConvertHex(s)
+        const color = ConvertHex(s);
         const a = s[3] / 255;
         this.ctx.fillStyle = color;
         this.ctx.globalAlpha = a;
@@ -98,7 +104,7 @@ class Panel {
         break;
       case PenType.Fill:
         let pixel = this.ctx.getImageData(x, y, 1, 1).data;
-        const hex =ConvertHex(pixel)
+        const hex = ConvertHex(pixel);
         if (this.pen.hex == hex && this.pen.a == p[3] / 255) {
           return;
         }
@@ -106,7 +112,7 @@ class Panel {
         break;
       case PenType.Picker:
         let color = this.ctx.getImageData(x, y, 1, 1).data;
-        let h =ConvertHex(color)
+        let h = ConvertHex(color);
         this.pen.hex = h;
         this.pen.a = color[3] / 255;
         document.getElementById("colorPanel").value = h;
@@ -127,21 +133,19 @@ class Panel {
         c[0] *= r;
         c[1] *= r;
         c[2] *= r;
-        let h1 =ConvertHex(c)
+        let h1 = ConvertHex(c);
         this.ctx.fillStyle = h1;
-        this.ctx.globalAlpha = c[3]/255
-        console.log(h1);
+        this.ctx.globalAlpha = c[3] / 255;
         this.ctx.clearRect(x, y, 1, 1);
         this.ctx.fillRect(x, y, 1, 1);
         break;
       case PenType.Alpha:
         let ca = this.ctx.getImageData(x, y, 1, 1).data;
-        let ra = 1-Math.random() * 0.1;
+        let ra = 1 - Math.random() * 0.1;
         ca[3] *= ra;
-        let he =ConvertHex(ca)
+        let he = ConvertHex(ca);
         this.ctx.fillStyle = he;
-        this.ctx.globalAlpha = ca[3]/255
-        console.log(he);
+        this.ctx.globalAlpha = ca[3] / 255;
         this.ctx.clearRect(x, y, 1, 1);
         this.ctx.fillRect(x, y, 1, 1);
         break;
@@ -192,6 +196,10 @@ class Panel {
         this.action = "paint";
         this.ctx.globalAlpha = this.pen.a;
         this.ctx.fillStyle = this.pen.hex;
+        if (this.config.isSave) {
+          this.config.isSave = false;
+          document.title += "*";
+        }
         const history = [];
         for (let y = 0; y < this.config.height; y++) {
           const tmp = [];
@@ -219,7 +227,6 @@ class Panel {
       }
     });
     main.addEventListener("mouseout", (e) => {
-      console.log(e);
       this.action = "none";
     });
     main.addEventListener("mousemove", (e) => {
@@ -258,7 +265,6 @@ class Panel {
       const t = document.getElementById(id);
       tools.push(t);
       t.onclick = () => {
-        console.log("123");
         tools.map((i) => {
           i.className = "";
         });

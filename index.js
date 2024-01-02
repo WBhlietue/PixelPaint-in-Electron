@@ -36,7 +36,7 @@ const createWindow = () => {
       title: "Save File",
       defaultPath: app.getPath("documents"), // 设置默认保存路径
       filters: [
-        { name: "Image", extensions: ["png"] },
+        { name: "PixelPaint", extensions: ["pixelpaint"] },
         { name: "All Files", extensions: ["*"] },
       ],
     };

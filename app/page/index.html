@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>New Paint</title>
     <link rel="stylesheet" href="../style/app.css" />
   </head>
   <body>
@@ -35,7 +35,12 @@
           <img id="tools-light"src="../assets/image/light.png" />
           <img id="tools-alpha"src="../assets/image/goAlpha.png" />
         </div>
-        <button id="btnExport">Export</button>
+        <input type="file" id="inputFile" accept=".pixelpaint" style = "display: none;">
+        <input type="file" id="inputFilePng" accept=".png" style = "display: none;">
+        <button id="btnOpen">OpenFile</button>
+        <button id="btnOpenPng">OpenPng</button>
+        <button id="btnExport">Export As PNG</button>
+        <button id="btnSave">Save</button>
       </div>
     </div>
     <script src="../js/core.js"></script>
