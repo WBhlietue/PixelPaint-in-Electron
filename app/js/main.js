@@ -13,6 +13,7 @@ const paintWindowConfig = {
 const pen = new Pen("#000000", 255);
 const color = new ColorPanel(pen);
 
+
 color.Spawn();
 document.addEventListener("mousedown", function (event) {
     if (event.button === 1) {
