@@ -1,5 +1,5 @@
 const { app, BrowserWindow } = require("electron");
-
+const path = require('path');
 var win;
 const createWindow = () => {
     win = new BrowserWindow({
@@ -10,7 +10,8 @@ const createWindow = () => {
         
     });
     win.maximize()
-    win.loadURL(__dirname + "/app/page/index.html");
+    win.loadURL(`file://${path.join(__dirname, 'app', 'page', 'index.html')}`);
+
 };
 
 app.whenReady().then(() => {

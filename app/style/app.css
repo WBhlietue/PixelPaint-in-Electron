@@ -57,3 +57,31 @@ body {
     margin: 0;
     overflow: hidden;
 }
+
+.tools{
+    width: 50%;
+    border: 1px black solid;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.tools img{
+    width: 40%;
+    image-rendering: pixelated;
+    border: 1px black solid;
+    margin: 3%;
+    -webkit-user-drag: none;
+    user-drag: none;
+    cursor: pointer;
+}
+.tools .select{
+    background-color: rgb(185, 168, 137);
+}
+
+#colorAlphaNum{
+    width: 30%;
+}
+.color{
+    width: 100%;
+}

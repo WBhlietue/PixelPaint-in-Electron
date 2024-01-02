@@ -1,33 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Document</title>
-        <link rel="stylesheet" href="../style/app.css" />
-    </head>
-    <body>
-        <div id="main">
-            <div id="paint"> </div>
-            <div class="controls">
-                <div class="create">
-                    <div>Page</div>
-                    <input type="number" class= "sizeInput" id="sizeX">
-                    <label>X</label>
-                    <input type="number" class= "sizeInput" id="sizeY">
-                    <button id="bntCreate">Create New</button>
-                </div>
-                <div class="color">
-                    <label>Color</label>
-                    <input id="colorPanel" />
-                    <input id="colorHex">
-                    <input id="colorAlpha" />
-                </div>
-                <button id="btnExport">Export</button>
-            </div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="../style/app.css" />
+  </head>
+  <body>
+    <div id="main">
+      <div id="paint"></div>
+      <div class="controls">
+        <div class="create">
+          <div>Page</div>
+          <input type="number" class="sizeInput" id="sizeX" />
+          <label>X</label>
+          <input type="number" class="sizeInput" id="sizeY" />
+          <button id="bntCreate">Create New</button>
         </div>
-        <script src="../js/core.js"></script>
-        <script src="../js/main.js"></script>
-    </body>
+        <div class="color">
+          <label>Color</label>
+          <input id="colorPanel" />
+          <input id="colorHex" />
+          <br>
+          <label>Alpha</label>
+          <input id="colorAlpha" />
+          <input id="colorAlphaNum" />
+        </div>
+        <div class="tools">
+          <img id="tools-pencil"src="../assets/image/pencil.png" class="select"/>
+          <img id="tools-eraser"src="../assets/image/eraser.png" />
+          <img id="tools-fill"src="../assets/image/fill.png" />
+        </div>
+        <button id="btnExport">Export</button>
+      </div>
+    </div>
+    <script src="../js/core.js"></script>
+    <script src="../js/main.js"></script>
+  </body>
 </html>
