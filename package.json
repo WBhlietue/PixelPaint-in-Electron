@@ -27,6 +27,10 @@
     "mac": {
       "target": "dmg",
       "icon": "app/assets/logo.icns"
+    },
+    "win": {
+      "target": "dir",
+      "icon": "app/assets/logo.ico"
     }
   }
 }
